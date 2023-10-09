@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <title> Warteg site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mypic {
+            width: 100%;
+            height: 300px;
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://img.inews.co.id/media/600/files/networks/2022/07/01/8c270_7-warteg-di-luar-negeri.jpg');
+            background-position: center;
+            background-size: cover;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 20px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px black;
+        }
+
+        .mypost>button {
+            margin-top: 15px;
+        }
+
+        .mycard {
+            width: 95%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .mycard>.card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            show_review();
+        })
+
+        function show_review() {
+            $('.mycard').empty();
+            $.ajax({
+                type: "GET",
+                url: "/review",
+                data: {},
+                success: function (response) {
+                    let rows = response['messages']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['name']
+                        let comment = rows[i]['comment']
+
+                        let temp_html = `
+                        <div class="card">
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0">
+                                    <p>${comment}</p>
+                                    <footer class="blockquote-footer">${name}
+                                    </footer>
+                                </blockquote>
+                            </div>
+                        </div>
+                        `
+                        $('.mycard').append(temp_html);
+
+                    }
+                }
+            })
+        }
+
+        function leave_review(){
+            let name = $('#inputName').val();
+            let comment = $('#reviewMessage').val();
+
+            $.ajax({
+                type : "POST",
+                url : "/review",
+                data : {
+                     name_give : name,
+                     comment_give : comment
+                },
+                success : function(response){
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <div class="mypic">
+        <h1>Warteg Review Page</h1>
+    </div>
+    <div class="mypost">
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="inputName" placeholder="Enter Your Nickname">
+            <label for="floatingInput">Customer Name</label>
+        </div>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="reviewMessage"></textarea>
+            <label for="floatingTextarea"> Review Message</label>
+        </div>
+        <button onclick="leave_review()" type="button" class="btn btn-dark">Leave a message</button>
+    </div>
+    <div class="mycard">
+        <div class="card">
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>Oseng tempenya super enak, dimasak dengat tepat sehingga teksturnya tidak terlalu kering</p>
+                    <footer class="blockquote-footer">Murjito37
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>Bandeng presto di sini tiada duanya, suamiku suka banget</p>
+                    <footer class="blockquote-footer">Lasmiyarti71
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>Bebek gorengnya sangat gurih dan lembut, gratis refill es teh lagi. Mantap pokoknya</p>
+                    <footer class="blockquote-footer">Suyatmi92
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>Pelayanannya sangat ramah, saya suka semur jengkolnya</p>
+                    <footer class="blockquote-footer">Sri_Hariyati754
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
